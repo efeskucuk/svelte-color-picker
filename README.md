@@ -27,10 +27,10 @@ function colorCallback(rgba) {
 
 Svelte Color Picker currently has one type of colorpicker.
 
-#### </HsvPicker>
+#### \</HsvPicker>
 | Props | Value Type | Use |
 | ------ | ------ | ------ |
-| on:colorChange | function | Function gets called every time color changes |
+| on:colorChange | function | Given function gets called every time color changes |
 
 License
 ----
