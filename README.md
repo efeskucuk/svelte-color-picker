@@ -1,4 +1,4 @@
-# Svelte Color Picker
+# Svelte Color Picker [Demo](https://qintarp.github.io)
  [![svelte-v3](https://img.shields.io/badge/svelte-v3-blueviolet.svg)](https://svelte.dev)
 ## Installation
 
