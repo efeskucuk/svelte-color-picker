@@ -1,12 +1,17 @@
 <script>
 import {onMount,createEventDispatcher} from 'svelte';
 
+export let startColor ="#FF0000";
 
 onMount(() => {
  document.addEventListener("mouseup", mouseUp);
  document.addEventListener("mousemove", mouseMove);
+ setStartColor()
 });
 
+Number.prototype.mod = function(n) {
+    return ((this%n)+n)%n;
+};
 const dispatch = createEventDispatcher();
 let tracked;
 let h = 1;
@@ -18,6 +23,40 @@ let g = 0;
 let b = 0;
 let hexValue = '#FF0000';
 
+
+function setStartColor() {
+  let hex = startColor.replace('#','');
+  if (hex.length !== 6 && hex.length !== 3 && !hex.match(/([^A-F0-9])/gi)) {
+    alert('Invalid property value (startColor)');
+    return;
+  }
+  let hexFiltered='';
+  if (hex.length === 3)
+    hex.split('').forEach( c => {hexFiltered += c+c;});
+  else
+    hexFiltered=hex;
+  hexValue = hexFiltered;
+  r = parseInt(hexFiltered.substring(0,2), 16);
+  g = parseInt(hexFiltered.substring(2,4), 16);
+  b = parseInt(hexFiltered.substring(4,6), 16);
+  rgbToHSV(r,g,b,true);
+  updateCsPicker();
+  updateHuePicker();
+}
+
+function updateCsPicker() {
+  let csPicker = document.querySelector("#colorsquare-picker");
+  let xPercentage = s * 100;
+  let yPercentage = (1 - v) * 100;
+  csPicker.style.top = yPercentage + "%";
+  csPicker.style.left = xPercentage + "%";
+}
+
+function updateHuePicker() {
+  let huePicker = document.querySelector("#hue-picker");
+  let xPercentage = h * 100;
+  huePicker.style.left = xPercentage + "%";
+}
 
 function colorChangeCallback() {
   dispatch('colorChange', {
@@ -119,7 +158,6 @@ function colorChange() {
  colorChangeCallback();
 }
 
-
 function alphaDown(event) {
  tracked = event.currentTarget;
  let xPercentage = ((event.offsetX - 9) / 220) * 100;
@@ -178,6 +216,63 @@ function RGBAToHex() {
 
 
  return ("#" + rHex + gHex + bHex).toUpperCase();
+}
+
+function rgbToHSV(r, g, b, update) {
+    let rperc, gperc, bperc,max,min,diff,pr,hnew,snew,vnew;
+    rperc = r / 255;
+    gperc = g / 255;
+    bperc = b / 255;
+    max = Math.max(rperc, gperc, bperc);
+    min = Math.min(rperc, gperc, bperc);
+    diff = max - min;
+
+    vnew = max;
+    (vnew == 0) ? snew = 0 : snew = diff / max ;
+
+    for (let i=0;i<3;i++) {
+      if ([rperc,gperc,bperc][i] === max) {
+        pr=i;
+        break;
+      }
+    }
+    if (diff==0) {
+      hnew = 0;
+      if (update) {
+        h=hnew;
+        s=snew;
+        v=vnew;
+        hueChange();
+        return;
+      }
+      else {
+        return {h:hnew,s:snew,v:vnew};
+      }
+    }
+    else {
+      switch (pr) {
+        case 0:
+          hnew=60*(((gperc-bperc)/diff)%6)/360
+          break;
+        case 1:
+          hnew=60*(((bperc-rperc)/diff)+2)/360
+          break;
+        case 2:
+          hnew=60*(((rperc-gperc)/diff)+4)/360
+          break;
+      }
+      if (hnew < 0) hnew+=6;
+    }
+
+    if (update) {
+      h=hnew;
+      s=snew;
+      v=vnew;
+      hueChange();
+    }
+    else {
+      return {h:hnew,s:snew,v:vnew};
+    }
 }
 </script>
 

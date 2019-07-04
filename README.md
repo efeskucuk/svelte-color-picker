@@ -1,4 +1,4 @@
-# Svelte Color Picker [Demo](https://qintarp.github.io)
+# Svelte Color Picker [Demo](https://qintarp.github.io/svelte-color-picker)
  [![svelte-v3](https://img.shields.io/badge/svelte-v3-blueviolet.svg)](https://svelte.dev)
 ## Installation
 
@@ -19,7 +19,7 @@ function colorCallback(rgba) {
 }
 </script>
 
-<HsvPicker on:colorChange={colorCallback}/>
+<HsvPicker on:colorChange={colorCallback} startColor={"#FBFBFB"}/>
 ```
 
 
@@ -31,6 +31,7 @@ Svelte Color Picker currently has one type of colorpicker.
 | Props | Value Type | Use |
 | ------ | ------ | ------ |
 | on:colorChange | function | Given function gets called every time color changes |
+| startColor | string | Initializes color picker with the value (hexadecimal without alpha). |
 
 License
 ----
