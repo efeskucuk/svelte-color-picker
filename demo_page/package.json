@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "sirv-cli": "^0.4.4",
-    "svelte-color-picker": "^1.0.3",
+    "svelte-color-picker": "^1.0.6",
     "ws": "^7.0.1"
   },
   "scripts": {
