@@ -48,10 +48,15 @@ function setStartColor() {
   updateHuePicker();
 }
 
+function removeEventListenerFromElement(elementId, eventName, listenerCallback) {
+  let element = document.querySelector(elementId);
+  if (element) element.removeEventListener(eventName, listenerCallback);
+}
+
 function killMouseEvents() {
-  document.querySelector("#alpha-event").removeEventListener("mousedown",alphaDown);
-  document.querySelector("#colorsquare-event").removeEventListener("mousedown",csDown);
-  document.querySelector("#hue-event").removeEventListener("mousedown",hueDown);
+  removeEventListenerFromElement("#alpha-event", "mousedown", alphaDown);
+  removeEventListenerFromElement("#colorsquare-event", "mousedown", csDown);
+  removeEventListenerFromElement("#hue-event", "mousedown", hueDown);
   document.removeEventListener("mouseup",mouseUp);
   document.removeEventListener("mousemove",mouseMove);
   document.removeEventListener("touchstart",killMouseEvents);
@@ -59,9 +64,9 @@ function killMouseEvents() {
 }
 
 function killTouchEvents() {
-  document.querySelector("#alpha-event").removeEventListener("touchstart",alphaDownTouch);
-  document.querySelector("#colorsquare-event").removeEventListener("touchstart",csDownTouch);
-  document.querySelector("#hue-event").removeEventListener("touchstart",hueDownTouch);
+  removeEventListenerFromElement("#alpha-event", "touchstart", alphaDownTouch);
+  removeEventListenerFromElement("#colorsquare-event", "touchstart", csDownTouch);
+  removeEventListenerFromElement("#hue-event", "touchstart", hueDownTouch);
   document.removeEventListener("touchend",mouseUp);
   document.removeEventListener("touchmove",touchMove);
   document.removeEventListener("touchstart",killMouseEvents);
