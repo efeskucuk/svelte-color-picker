@@ -5,7 +5,6 @@
 <script>
 	import {HsvPicker} from 'svelte-color-picker';
 
-
 	function colorCallback(rgb) {
 		let r = rgb.detail.r;
 		let g = rgb.detail.g;
@@ -55,6 +54,6 @@
 		<a class="github-button" href="https://github.com/qintarp/svelte-color-picker" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star qintarp/svelte-color-picker on GitHub">Star</a>
 	</div>
 	<div class="container">
-		<HsvPicker on:colorChange={colorCallback} startColor={"#82EAEA"}/>
+		<HsvPicker on:colorChange={colorCallback} startColor={"#82EAEA"} width={300} />
 	</div>
 </div>
