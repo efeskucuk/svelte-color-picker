@@ -32,6 +32,8 @@ Svelte Color Picker currently has one type of colorpicker.
 | ------ | ------ | ------ |
 | on:colorChange | function | Given function gets called every time color changes |
 | startColor | string | Initializes color picker with the value (hexadecimal without alpha). |
+| width | number | Changes the color picker's width `default: 240` |
+| height | number | Changes the color picker's height `default: 265` |
 
 License
 ----
