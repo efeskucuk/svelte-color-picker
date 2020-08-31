@@ -1,10 +1,5 @@
-import App from './App.svelte';
+import HsvPicker from './HsvPicker.svelte';
 
-const app = new App({
-	target: document.body,
-	props: {
-		name: 'world'
-	}
-});
+const app = new HsvPicker({ target: document.body });
 
 export default app;
