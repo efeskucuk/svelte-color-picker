@@ -49,10 +49,10 @@ function setStartColor() {
   updateCsPicker();
   updateHuePicker();
 }
-  
-function removeEventListenerFromElement(elementId, eventName, listenerCallback) {	
-  let element = document.querySelector(elementId);	
-  if (element) element.removeEventListener(eventName, listenerCallback);	
+
+function removeEventListenerFromElement(elementId, eventName, listenerCallback) {
+  let element = document.querySelector(elementId);
+  if (element) element.removeEventListener(eventName, listenerCallback);
 }
 
 function killMouseEvents() {
