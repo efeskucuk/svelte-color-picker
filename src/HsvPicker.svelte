@@ -2,6 +2,8 @@
 import {onMount,createEventDispatcher} from 'svelte';
 
 export let startColor ="#FF0000";
+export let width = 240;
+export let height = 265;
 
 onMount(() => {
  document.addEventListener("mouseup", mouseUp);
@@ -393,8 +395,6 @@ function rgbToHSV(r, g, b, update) {
 
 <style>
 .main-container {
-	width: 240px;
-	height: 265px;
 	background: #f2f2f2;
 	border-radius: 1px;
 	-webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.51);
@@ -408,17 +408,21 @@ function rgbToHSV(r, g, b, update) {
             user-select: none;
 }
 
+.colorsquare {
+  height: 60%;
+}
+
 .saturation-gradient {
 	background: linear-gradient(to right, rgb(255, 255, 255), rgba(255, 255, 255, 0));
-	width: 240px;
-	height: 160px;
+	width: 100%;
+	height: 100%;
 }
 
 .value-gradient {
 	background: linear-gradient(to top, rgb(0, 0, 0), rgba(0, 0, 0, 0));
 	overflow: hidden;
-	width: 240px;
-	height: 160px;
+	width: 100%;
+	height: 100%;
 }
 
 .hue-selector {
@@ -600,7 +604,7 @@ function rgbToHSV(r, g, b, update) {
 }
 </style>
 
-<div class="main-container">
+<div class="main-container" style={`width: ${width}px; height: ${height}px`}>
 
   <div class="colorsquare size">
       <div class="saturation-gradient">
