@@ -1,7 +1,16 @@
 <script>
 import {onMount,createEventDispatcher} from 'svelte';
 
-export let startColor ="#FF0000";
+export let startColor = "#FF0000";
+
+let colorSquarePicker;
+let colorSquareEvent;
+let colorSquare;
+let colorPicked;
+let huePicker;
+let hueEvent;
+let alphaPicker;
+let alphaEvent;
 
 onMount(() => {
  document.addEventListener("mouseup", mouseUp);
@@ -48,15 +57,14 @@ function setStartColor() {
   updateHuePicker();
 }
 
-function removeEventListenerFromElement(elementId, eventName, listenerCallback) {
-  let element = document.querySelector(elementId);
+function removeEventListenerFromElement(element, eventName, listenerCallback) {
   if (element) element.removeEventListener(eventName, listenerCallback);
 }
 
 function killMouseEvents() {
-  removeEventListenerFromElement("#alpha-event", "mousedown", alphaDown);
-  removeEventListenerFromElement("#colorsquare-event", "mousedown", csDown);
-  removeEventListenerFromElement("#hue-event", "mousedown", hueDown);
+  removeEventListenerFromElement(alphaEvent, "mousedown", alphaDown);
+  removeEventListenerFromElement(colorSquareEvent, "mousedown", csDown);
+  removeEventListenerFromElement(hueEvent, "mousedown", hueDown);
   document.removeEventListener("mouseup",mouseUp);
   document.removeEventListener("mousemove",mouseMove);
   document.removeEventListener("touchstart",killMouseEvents);
@@ -64,9 +72,9 @@ function killMouseEvents() {
 }
 
 function killTouchEvents() {
-  removeEventListenerFromElement("#alpha-event", "touchstart", alphaDownTouch);
-  removeEventListenerFromElement("#colorsquare-event", "touchstart", csDownTouch);
-  removeEventListenerFromElement("#hue-event", "touchstart", hueDownTouch);
+  removeEventListenerFromElement(alphaEvent, "touchstart", alphaDownTouch);
+  removeEventListenerFromElement(colorSquareEvent, "touchstart", csDownTouch);
+  removeEventListenerFromElement(hueEvent, "touchstart", hueDownTouch);
   document.removeEventListener("touchend",mouseUp);
   document.removeEventListener("touchmove",touchMove);
   document.removeEventListener("touchstart",killMouseEvents);
@@ -74,15 +82,13 @@ function killTouchEvents() {
 }
 
 function updateCsPicker() {
-  let csPicker = document.querySelector("#colorsquare-picker");
   let xPercentage = s * 100;
   let yPercentage = (1 - v) * 100;
-  csPicker.style.top = yPercentage + "%";
-  csPicker.style.left = xPercentage + "%";
+  colorSquarePicker.style.top = yPercentage + "%";
+  colorSquarePicker.style.left = xPercentage + "%";
 }
 
 function updateHuePicker() {
-  let huePicker = document.querySelector("#hue-picker");
   let xPercentage = h * 100;
   huePicker.style.left = xPercentage + "%";
 }
@@ -101,18 +107,17 @@ function mouseMove(event) {
   let mouseX = event.clientX;
   let mouseY = event.clientY;
   let trackedPos = tracked.getBoundingClientRect();
-  let xPercentage, yPercentage, picker;
+  let xPercentage, yPercentage;
   switch (tracked.id) {
    case "colorsquare-event":
     xPercentage = (mouseX - trackedPos.x) / 240 * 100;
     yPercentage = (mouseY - trackedPos.y) / 160 * 100;
     (xPercentage > 100) ? xPercentage = 100: (xPercentage < 0) ? xPercentage = 0 : null;
     (yPercentage > 100) ? yPercentage = 100: (yPercentage < 0) ? yPercentage = 0 : null;
-    picker = document.querySelector("#colorsquare-picker");
     yPercentage = yPercentage.toFixed(2);
     xPercentage = xPercentage.toFixed(2);
-    picker.style.top = yPercentage + "%";
-    picker.style.left = xPercentage + "%";
+    colorSquarePicker.style.top = yPercentage + "%";
+    colorSquarePicker.style.left = xPercentage + "%";
     s = xPercentage / 100;
     v = 1 - yPercentage / 100;
     colorChange();
@@ -121,8 +126,7 @@ function mouseMove(event) {
     xPercentage = (mouseX - 10 - trackedPos.x) / 220 * 100;
     (xPercentage > 100) ? xPercentage = 100: (xPercentage < 0) ? xPercentage = 0 : null;
     xPercentage = xPercentage.toFixed(2);
-    picker = document.querySelector("#hue-picker");
-    picker.style.left = xPercentage + "%";
+    huePicker.style.left = xPercentage + "%";
     h = xPercentage / 100;
     hueChange();
     break;
@@ -130,8 +134,7 @@ function mouseMove(event) {
     xPercentage = (mouseX - 10 - trackedPos.x) / 220 * 100;
     (xPercentage > 100) ? xPercentage = 100: (xPercentage < 0) ? xPercentage = 0 : null;
     xPercentage = xPercentage.toFixed(2);
-    picker = document.querySelector("#alpha-picker");
-    picker.style.left = xPercentage + "%";
+    alphaPicker.style.left = xPercentage + "%";
     a = xPercentage / 100;
     colorChange();
     break;
@@ -146,18 +149,17 @@ function touchMove(event) {
   let mouseX = event.touches[0].clientX;
   let mouseY = event.touches[0].clientY;
   let trackedPos = tracked.getBoundingClientRect();
-  let xPercentage, yPercentage, picker;
+  let xPercentage, yPercentage;
   switch (tracked.id) {
    case "colorsquare-event":
     xPercentage = (mouseX - trackedPos.x) / 240 * 100;
     yPercentage = (mouseY - trackedPos.y) / 160 * 100;
     (xPercentage > 100) ? xPercentage = 100: (xPercentage < 0) ? xPercentage = 0 : null;
     (yPercentage > 100) ? yPercentage = 100: (yPercentage < 0) ? yPercentage = 0 : null;
-    picker = document.querySelector("#colorsquare-picker");
     yPercentage = yPercentage.toFixed(2);
     xPercentage = xPercentage.toFixed(2);
-    picker.style.top = yPercentage + "%";
-    picker.style.left = xPercentage + "%";
+    colorSquarePicker.style.top = yPercentage + "%";
+    colorSquarePicker.style.left = xPercentage + "%";
     s = xPercentage / 100;
     v = 1 - yPercentage / 100;
     colorChange();
@@ -166,8 +168,7 @@ function touchMove(event) {
     xPercentage = (mouseX - 10 - trackedPos.x) / 220 * 100;
     (xPercentage > 100) ? xPercentage = 100: (xPercentage < 0) ? xPercentage = 0 : null;
     xPercentage = xPercentage.toFixed(2);
-    picker = document.querySelector("#hue-picker");
-    picker.style.left = xPercentage + "%";
+    huePicker.style.left = xPercentage + "%";
     h = xPercentage / 100;
     hueChange();
     break;
@@ -175,8 +176,7 @@ function touchMove(event) {
     xPercentage = (mouseX - 10 - trackedPos.x) / 220 * 100;
     (xPercentage > 100) ? xPercentage = 100: (xPercentage < 0) ? xPercentage = 0 : null;
     xPercentage = xPercentage.toFixed(2);
-    picker = document.querySelector("#alpha-picker");
-    picker.style.left = xPercentage + "%";
+    alphaPicker.style.left = xPercentage + "%";
     a = xPercentage / 100;
     colorChange();
     break;
@@ -192,9 +192,8 @@ function csDown(event) {
  let yPercentage = ((event.offsetY + 1) / 160) * 100;
  yPercentage = yPercentage.toFixed(2);
  xPercentage = xPercentage.toFixed(2)
- let picker = document.querySelector("#colorsquare-picker");
- picker.style.top = yPercentage + "%";
- picker.style.left = xPercentage + "%";
+ colorSquarePicker.style.top = yPercentage + "%";
+ colorSquarePicker.style.left = xPercentage + "%";
  s = xPercentage / 100;
  v = 1 - yPercentage / 100;
  colorChange();
@@ -209,9 +208,8 @@ function csDownTouch(event) {
  let yPercentage = ((offsetY + 1) / 160) * 100;
  yPercentage = yPercentage.toFixed(2);
  xPercentage = xPercentage.toFixed(2)
- let picker = document.querySelector("#colorsquare-picker");
- picker.style.top = yPercentage + "%";
- picker.style.left = xPercentage + "%";
+ colorSquarePicker.style.top = yPercentage + "%";
+ colorSquarePicker.style.left = xPercentage + "%";
  s = xPercentage / 100;
  v = 1 - yPercentage / 100;
  colorChange();
@@ -225,8 +223,7 @@ function hueDown(event) {
  tracked = event.currentTarget;
  let xPercentage = ((event.offsetX - 9) / 220) * 100;
  xPercentage = xPercentage.toFixed(2);
- let picker = document.querySelector("#hue-picker");
- picker.style.left = xPercentage + "%";
+ huePicker.style.left = xPercentage + "%";
  h = xPercentage / 100;
  hueChange();
 }
@@ -237,16 +234,14 @@ function hueDownTouch(event) {
  let offsetX = event.targetTouches[0].clientX - rect.left;
  let xPercentage = ((offsetX - 9) / 220) * 100;
  xPercentage = xPercentage.toFixed(2);
- let picker = document.querySelector("#hue-picker");
- picker.style.left = xPercentage + "%";
+ huePicker.style.left = xPercentage + "%";
  h = xPercentage / 100;
  hueChange();
 }
 
 function hueChange() {
  let rgb = hsvToRgb(h, 1, 1)
- let colorsquare = document.querySelector(".colorsquare")
- colorsquare.style.background = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},1)`;
+ colorSquare.style.background = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},1)`;
  colorChange();
 }
 
@@ -256,8 +251,7 @@ function colorChange() {
  g = rgb[1];
  b = rgb[2];
  hexValue = RGBAToHex();
- let pickedColor = document.querySelector(".color-picked");
- pickedColor.style.background = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a})`;
+ colorPicked.style.background = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a})`;
  colorChangeCallback();
 }
 
@@ -265,8 +259,7 @@ function alphaDown(event) {
  tracked = event.currentTarget;
  let xPercentage = ((event.offsetX - 9) / 220) * 100;
  xPercentage = xPercentage.toFixed(2);
- let picker = document.querySelector("#alpha-picker");
- picker.style.left = xPercentage + "%";
+ alphaPicker.style.left = xPercentage + "%";
  a = xPercentage / 100;
  colorChange();
 }
@@ -277,8 +270,7 @@ function alphaDownTouch(event) {
  let offsetX = event.targetTouches[0].clientX - rect.left;
  let xPercentage = ((offsetX - 9) / 220) * 100;
  xPercentage = xPercentage.toFixed(2);
- let picker = document.querySelector("#alpha-picker");
- picker.style.left = xPercentage + "%";
+ alphaPicker.style.left = xPercentage + "%";
  a = xPercentage / 100;
  colorChange();
 }
@@ -602,29 +594,29 @@ function rgbToHSV(r, g, b, update) {
 
 <div class="main-container">
 
-  <div class="colorsquare size">
+  <div bind:this={colorSquare} class="colorsquare size">
       <div class="saturation-gradient">
           <div class="value-gradient">
-              <div id="colorsquare-picker"></div>
-              <div id="colorsquare-event" on:mousedown={csDown} on:touchstart={csDownTouch}></div>
+              <div bind:this={colorSquarePicker} id="colorsquare-picker"></div>
+              <div bind:this={colorSquareEvent} id="colorsquare-event" on:mousedown={csDown} on:touchstart={csDownTouch}></div>
           </div>
       </div>
   </div>
 
   <div class="hue-selector">
-      <div id="hue-picker"></div>
-      <div id="hue-event" on:mousedown={hueDown} on:touchstart={hueDownTouch}></div>
+      <div bind:this={huePicker} id="hue-picker"></div>
+      <div bind:this={hueEvent} id="hue-event" on:mousedown={hueDown} on:touchstart={hueDownTouch}></div>
   </div>
 
   <div class="alpha-selector">
       <div class="alpha-value"></div>
-      <div id="alpha-picker"></div>
-      <div id="alpha-event" on:mousedown={alphaDown} on:touchstart={alphaDownTouch}></div>
+      <div bind:this={alphaPicker} id="alpha-picker"></div>
+      <div bind:this={alphaEvent} id="alpha-event" on:mousedown={alphaDown} on:touchstart={alphaDownTouch}></div>
   </div>
 
   <div class="color-info-box">
     <div class="color-picked-bg">
-      <div class="color-picked"></div>
+      <div bind:this={colorPicked} class="color-picked"></div>
     </div>
 
     <div class="hex-text-block">
